@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smokehouse Rota — June 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:        #fdf6e9;
+    --paper-dark:   #f0e6cc;
+    --ink:          #1c1209;
+    --rule:         #d4c4a0;
+    --header-bg:    #1c1209;
+    --weekend-tint: #f5edd8;
+
+    --kasper: #3a6fd8;
+    --claire: #9b30b8;
+    --sid:    #d94f7a;
+    --daisy:  #cc3333;
+    --jake:   #2e9e45;
+    --jim:    #d4751a;
+    --roxy:   #a0a0a0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #d6c9b0;
+    font-family: 'Karla', sans-serif;
+    padding: 20px 12px 48px;
+  }
+
+  .page { max-width: 980px; margin: 0 auto; }
+
+  .month-block {
+    background: var(--paper);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.22), 0 1px 4px rgba(0,0,0,0.1);
+  }
+
+  .month-header {
+    background: var(--header-bg);
+    padding: 16px 22px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .month-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 54px;
+    color: #fdf6e9;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .month-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: #7a6a4a;
+    letter-spacing: 0.08em;
+    margin-top: 6px;
+    align-self: flex-end;
+  }
+  .legend {
+    margin-left: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #fdf6e9;
+    opacity: 0.9;
+  }
+  .legend-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .legend-note {
+    font-size: 10px;
+    color: #7a6a4a;
+    letter-spacing: 0.04em;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  .dow-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: var(--paper-dark);
+    border-bottom: 2px solid var(--ink);
+  }
+  .dow-cell {
+    padding: 6px 4px 5px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7a6040;
+  }
+  .dow-cell.we { color: #b84a00; }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-left: 1px solid var(--rule);
+    border-top: 1px solid var(--rule);
+  }
+
+  .day-cell {
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    min-height: 100px;
+    padding: 6px 7px 7px;
+    background: var(--paper);
+    position: relative;
+  }
+  .day-cell.empty {
+    background: var(--paper-dark);
+    opacity: 0.4;
+  }
+  .day-cell.weekend { background: var(--weekend-tint); }
+  .day-cell.today {
+    background: #fffbeb;
+    box-shadow: inset 0 0 0 2px #d97706;
+  }
+  .day-cell.past { opacity: 0.55; }
+
+  .day-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: #a08060;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .day-cell.weekend .day-num { color: #b84a00; }
+  .day-cell.today .day-num   { color: #d97706; }
+
+  .staff-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .staff-entry {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  .opener-star {
+    font-size: 8px;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+  .staff-entry.kasper { color: var(--kasper); }
+  .staff-entry.claire { color: var(--claire); }
+  .staff-entry.sid    { color: var(--sid); }
+  .staff-entry.daisy  { color: var(--daisy); }
+  .staff-entry.jake   { color: var(--jake); }
+  .staff-entry.jim    { color: var(--jim); }
+  .staff-entry.roxy   { color: var(--roxy); }
+
+  .flag {
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .month-footer {
+    background: var(--paper-dark);
+    border-top: 1px solid var(--rule);
+    padding: 10px 16px;
+    font-size: 11px;
+    color: #7a6040;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    line-height: 1.8;
+  }
+  .month-footer span { margin-right: 20px; }
+  .month-footer strong { color: #4a3020; }
+
+  /* Mobile */
+  @media (max-width: 580px) {
+    .day-cell { min-height: 76px; padding: 4px; }
+    .day-num { font-size: 15px; }
+    .staff-entry { font-size: 10px; }
+    .month-name { font-size: 40px; }
+    .legend { display: none; }
+    .flag { font-size: 11px; top: 3px; right: 3px; }
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; padding: 0; }
+    .month-block { box-shadow: none; border-radius: 0; }
+    .day-cell { min-height: 88px; }
+    .day-cell.past { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="page" id="root"></div>
+
+<script>
+const STAFF = {
+  kasper: { name: 'Kasper', color: '#3a6fd8' },
+  claire: { name: 'Claire', color: '#9b30b8' },
+  sid:    { name: 'Sid',    color: '#d94f7a' },
+  daisy:  { name: 'Daisy',  color: '#cc3333' },
+  jake:   { name: 'Jake',   color: '#2e9e45' },
+  jim:    { name: 'Jim',    color: '#d4751a' },
+  roxy:   { name: 'Roxy',   color: '#a0a0a0' },
+};
+
+function getOpener(dow, staff) {
+  if (dow === 1 && staff.includes('claire')) return 'claire';
+  if (dow === 6 && staff.includes('sid'))    return 'sid';
+  if (staff.includes('kasper'))              return 'kasper';
+  if (dow === 6 && staff.includes('jake'))   return 'jake';
+  if (staff.includes('sid'))                 return 'sid';
+  return staff[0] || null;
+}
+
+// ── JUNE 2026 ROTA — confirmed ────────────────────────────────────────────────
+const ROTA = {
+  '2026-06-01': ['kasper'],
+  '2026-06-02': ['claire'],
+  '2026-06-03': ['kasper'],
+  '2026-06-04': ['kasper','daisy'],
+  '2026-06-05': ['kasper'],
+  '2026-06-06': ['kasper','sid','jake'],
+  '2026-06-07': ['sid','jake','jim'],
+
+  '2026-06-08': ['kasper'],
+  '2026-06-09': ['claire'],
+  '2026-06-10': ['kasper'],
+  '2026-06-11': ['kasper'],
+  '2026-06-12': ['kasper'],
+  '2026-06-13': ['kasper','sid','jake'],
+  '2026-06-14': ['sid','jake','jim'],
+
+  '2026-06-15': ['kasper'],
+  '2026-06-16': ['claire','sid'],
+  '2026-06-17': ['kasper','jim'],
+  '2026-06-18': ['kasper','daisy'],
+  '2026-06-19': ['kasper','sid'],
+  '2026-06-20': ['kasper','jake','jim'],
+  '2026-06-21': ['sid','jake'],
+
+  '2026-06-22': ['kasper','sid'],
+  '2026-06-23': ['claire','sid'],
+  '2026-06-24': ['kasper','daisy'],
+  '2026-06-25': ['kasper','daisy'],
+  '2026-06-26': ['kasper','sid'],
+  '2026-06-27': ['kasper','sid','jake'],
+  '2026-06-28': ['sid','jake'],
+
+  '2026-06-29': ['kasper','sid'],
+  '2026-06-30': ['claire','sid'],
+};
+
+const FLAGS = new Set([
+  '2026-06-15',
+  '2026-06-21',
+  '2026-06-28',
+]);
+
+const HOLIDAY_NOTES = [
+  { name: 'Daisy', note: 'off 11 June' },
+  { name: 'Sid',   note: 'off 20 June' },
+  { name: 'Jim',   note: 'away 21–28 June' },
+];
+
+const DOW_LABELS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const todayStr = new Date().toISOString().slice(0,10);
+function pad(n) { return String(n).padStart(2,'0'); }
+
+const year = 2026, month = 5, label = 'June';
+const firstDow = new Date(year, month, 1).getDay();
+const startOffset = firstDow === 0 ? 6 : firstDow - 1;
+const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+function dk(d) { return `${year}-${pad(month+1)}-${pad(d)}`; }
+
+// Legend — staff who appear this month
+const usedStaff = new Set();
+for (let d = 1; d <= daysInMonth; d++) {
+  (ROTA[dk(d)] || []).forEach(s => usedStaff.add(s));
+}
+const legendHTML = Object.keys(STAFF)
+  .filter(s => usedStaff.has(s))
+  .map(s => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${STAFF[s].color}"></div>
+      ${STAFF[s].name}
+    </div>`).join('')
+  + `<div class="legend-item"><span class="legend-note">★ opens &nbsp;·&nbsp; 🚩 needs cover</span></div>`;
+
+// Grid
+let cells = '';
+for (let i = 0; i < startOffset; i++) {
+  cells += `<div class="day-cell empty"></div>`;
+}
+
+for (let d = 1; d <= daysInMonth; d++) {
+  const key = dk(d);
+  const dow = (startOffset + d - 1) % 7;
+  const isWeekend = dow >= 5;
+  const isToday = key === todayStr;
+  const isPast = key < todayStr;
+  const staff = ROTA[key] || [];
+  const op = getOpener(dow, staff);
+  const needsFlag = FLAGS.has(key);
+
+  const classes = ['day-cell',
+    isWeekend ? 'weekend' : '',
+    isToday   ? 'today'   : '',
+    (isPast && !isToday) ? 'past' : '',
+  ].filter(Boolean).join(' ');
+
+  const staffRows = staff.map(sid => {
+    const star = sid === op ? `<span class="opener-star">★</span>` : '';
+    return `<div class="staff-entry ${sid}">${star}${STAFF[sid].name}</div>`;
+  }).join('');
+
+  cells += `
+    <div class="${classes}">
+      <div class="day-num">${d}</div>
+      <div class="staff-list">${staffRows}</div>
+      ${needsFlag ? `<div class="flag">🚩</div>` : ''}
+    </div>`;
+}
+
+const total = startOffset + daysInMonth;
+const trail = total % 7 === 0 ? 0 : 7 - (total % 7);
+for (let i = 0; i < trail; i++) cells += `<div class="day-cell empty"></div>`;
+
+const footerNotes = HOLIDAY_NOTES
+  .map(h => `<span><strong>${h.name}</strong> — ${h.note}</span>`).join('');
+
+document.getElementById('root').innerHTML = `
+  <div class="month-block">
+    <div class="month-header">
+      <div class="month-name">${label}</div>
+      <div class="month-year">${year}</div>
+      <div class="legend">${legendHTML}</div>
+    </div>
+    <div class="dow-row">
+      ${DOW_LABELS.map((d,i) =>
+        `<div class="dow-cell${i>=5?' we':''}">${d}</div>`).join('')}
+    </div>
+    <div class="cal-grid">${cells}</div>
+    <div class="month-footer">${footerNotes}</div>
+  </div>`;
+</script>
+</body>
+</html>
