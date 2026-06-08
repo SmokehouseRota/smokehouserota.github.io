@@ -112,9 +112,10 @@
 
   .dow-row {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, 14.2857%);
     background: var(--paper-dark);
     border-bottom: 2px solid var(--ink);
+    width: 100%;
   }
   .dow-cell {
     padding: 6px 4px 5px;
@@ -124,14 +125,16 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #7a6040;
+    overflow: hidden;
   }
   .dow-cell.we { color: #b84a00; }
 
   .cal-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, 14.2857%);
     border-left: 1px solid var(--rule);
     border-top: 1px solid var(--rule);
+    width: 100%;
   }
 
   .day-cell {
@@ -384,9 +387,10 @@ function monthKey(y, m) { return `${y}-${pad(m+1)}`; }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
 function renderMonth({ year, month, label, draft }) {
-  const firstDow = new Date(year, month, 1).getDay();
+  // Use UTC to avoid timezone-related day-of-week errors on different devices
+  const firstDow = new Date(Date.UTC(year, month, 1)).getUTCDay();
   const startOffset = firstDow === 0 ? 6 : firstDow - 1;
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
 
   // Collect which staff appear this month for legend
   const usedStaff = new Set();
