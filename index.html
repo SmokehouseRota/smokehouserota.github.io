@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smokehouse Rota — June 2026</title>
+<title>Smokehouse Rota — 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -14,13 +14,13 @@
     --header-bg:    #1c1209;
     --weekend-tint: #f5edd8;
 
-    --kasper: #3a6fd8;
-    --claire: #9b30b8;
-    --sid:    #d94f7a;
-    --daisy:  #cc3333;
-    --jake:   #2e9e45;
-    --jim:    #d4751a;
-    --roxy:   #a0a0a0;
+    --kasper: #3a6fd8;   /* blue */
+    --claire: #9b30b8;   /* purple */
+    --sid:    #d94f7a;   /* pink */
+    --daisy:  #cc3333;   /* red */
+    --jake:   #2e9e45;   /* green */
+    --jim:    #d4751a;   /* orange */
+    --roxy:   #1a1a1a;   /* black */
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,6 +38,7 @@
     border-radius: 3px;
     overflow: hidden;
     box-shadow: 0 6px 32px rgba(0,0,0,0.22), 0 1px 4px rgba(0,0,0,0.1);
+    margin-bottom: 32px;
   }
 
   .month-header {
@@ -62,6 +63,20 @@
     letter-spacing: 0.08em;
     margin-top: 6px;
     align-self: flex-end;
+  }
+  .draft-badge {
+    margin-left: 12px;
+    align-self: flex-end;
+    margin-bottom: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.1);
+    color: #a09070;
+    border: 1px solid #5a4a2a;
+    padding: 3px 8px;
+    border-radius: 3px;
   }
   .legend {
     margin-left: auto;
@@ -192,7 +207,6 @@
   .month-footer span { margin-right: 20px; }
   .month-footer strong { color: #4a3020; }
 
-  /* Mobile */
   @media (max-width: 580px) {
     .day-cell { min-height: 76px; padding: 4px; }
     .day-num { font-size: 15px; }
@@ -202,10 +216,9 @@
     .flag { font-size: 11px; top: 3px; right: 3px; }
   }
 
-  /* Print */
   @media print {
     body { background: white; padding: 0; }
-    .month-block { box-shadow: none; border-radius: 0; }
+    .month-block { box-shadow: none; border-radius: 0; page-break-after: always; }
     .day-cell { min-height: 88px; }
     .day-cell.past { opacity: 1; }
   }
@@ -215,6 +228,7 @@
 <div class="page" id="root"></div>
 
 <script>
+// ── STAFF ─────────────────────────────────────────────────────────────────────
 const STAFF = {
   kasper: { name: 'Kasper', color: '#3a6fd8' },
   claire: { name: 'Claire', color: '#9b30b8' },
@@ -222,9 +236,11 @@ const STAFF = {
   daisy:  { name: 'Daisy',  color: '#cc3333' },
   jake:   { name: 'Jake',   color: '#2e9e45' },
   jim:    { name: 'Jim',    color: '#d4751a' },
-  roxy:   { name: 'Roxy',   color: '#a0a0a0' },
+  roxy:   { name: 'Roxy',   color: '#1a1a1a' },
 };
 
+// ── OPENER LOGIC ──────────────────────────────────────────────────────────────
+// dow: 0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri, 5=Sat, 6=Sun
 function getOpener(dow, staff) {
   if (dow === 1 && staff.includes('claire')) return 'claire';
   if (dow === 6 && staff.includes('sid'))    return 'sid';
@@ -234,8 +250,25 @@ function getOpener(dow, staff) {
   return staff[0] || null;
 }
 
-// ── JUNE 2026 ROTA — confirmed ────────────────────────────────────────────────
-const ROTA = {
+// ── STANDARD TEMPLATE ─────────────────────────────────────────────────────────
+// Generates default staffing for any date based on rules
+// dow: 0=Mon..6=Sun
+function standardShifts(dow) {
+  switch(dow) {
+    case 0: return ['kasper','sid'];        // Mon: Kasper opens, Sid
+    case 1: return ['claire','sid'];        // Tue: Claire opens, Sid
+    case 2: return ['kasper'];              // Wed: Kasper only (Sid off)
+    case 3: return ['kasper','daisy'];      // Thu: Kasper, Daisy (Sid off)
+    case 4: return ['kasper','sid'];        // Fri: Kasper, Sid
+    case 5: return ['kasper','sid','jake']; // Sat: Kasper opens, Sid, Jake
+    case 6: return ['sid','jake','jim'];    // Sun: Sid opens, Jake, Jim
+    default: return [];
+  }
+}
+
+// ── CONFIRMED ROTA — JUNE & JULY ─────────────────────────────────────────────
+const CONFIRMED = {
+  // ══ JUNE 2026 ══
   '2026-06-01': ['kasper'],
   '2026-06-02': ['claire'],
   '2026-06-03': ['kasper'],
@@ -270,101 +303,172 @@ const ROTA = {
 
   '2026-06-29': ['kasper','sid'],
   '2026-06-30': ['claire','sid'],
+
+  // ══ JULY 2026 ══
+  '2026-07-01': ['kasper','jim'],
+  '2026-07-02': ['kasper','daisy'],
+  '2026-07-03': ['kasper','daisy'],
+  '2026-07-04': ['kasper','jake','jim'],
+  '2026-07-05': ['jake','jim'],
+
+  '2026-07-06': ['kasper'],
+  '2026-07-07': ['claire','sid'],
+  '2026-07-08': ['kasper'],
+  '2026-07-09': ['kasper','daisy'],
+  '2026-07-10': ['sid'],
+  '2026-07-11': ['sid','jake','jim'],
+  '2026-07-12': ['sid','jake','jim'],
+
+  '2026-07-13': ['sid','jim'],
+  '2026-07-14': ['claire','sid'],
+  '2026-07-15': ['kasper','sid'],
+  '2026-07-16': ['kasper','daisy'],
+  '2026-07-17': ['kasper','sid'],
+  '2026-07-18': ['kasper','sid','jake'],
+  '2026-07-19': ['sid','jake','jim'],
+
+  '2026-07-20': ['kasper','sid'],
+  '2026-07-21': ['claire','sid'],
+  '2026-07-22': ['kasper','jim'],
+  '2026-07-23': ['kasper','daisy'],
+  '2026-07-24': ['kasper','sid'],
+  '2026-07-25': ['kasper','sid','jake'],
+  '2026-07-26': ['jake','jim'],
+
+  '2026-07-27': ['kasper','jim'],
+  '2026-07-28': ['claire','jim'],
+  '2026-07-29': ['kasper','jim'],
+  '2026-07-30': ['kasper','daisy'],
+  '2026-07-31': ['kasper','sid'],
 };
 
+// ── FLAGS ─────────────────────────────────────────────────────────────────────
 const FLAGS = new Set([
-  '2026-06-15',
-  '2026-06-21',
-  '2026-06-28',
+  // June
+  '2026-06-15','2026-06-21','2026-06-28',
+  // July
+  '2026-07-05','2026-07-06','2026-07-08','2026-07-10',
+  '2026-07-26','2026-07-27','2026-07-28','2026-07-29',
 ]);
 
-const HOLIDAY_NOTES = [
-  { name: 'Daisy', note: 'off 11 June' },
-  { name: 'Sid',   note: 'off 20 June' },
-  { name: 'Jim',   note: 'away 21–28 June' },
+// ── HOLIDAY FOOTER NOTES ──────────────────────────────────────────────────────
+const HOLIDAY_NOTES = {
+  '2026-06': [
+    { name: 'Daisy',  note: 'off 11 June' },
+    { name: 'Sid',    note: 'off 20 June' },
+    { name: 'Jim',    note: 'away 21–28 June' },
+  ],
+  '2026-07': [
+    { name: 'Sid',    note: 'off 3–6 July & 26–29 July' },
+    { name: 'Kasper', note: 'off 10–14 July' },
+  ],
+};
+
+// ── MONTHS TO RENDER ──────────────────────────────────────────────────────────
+const MONTHS = [
+  { year: 2026, month: 5,  label: 'June',      draft: false },
+  { year: 2026, month: 6,  label: 'July',      draft: true  },
+  { year: 2026, month: 7,  label: 'August',    draft: true  },
+  { year: 2026, month: 8,  label: 'September', draft: true  },
+  { year: 2026, month: 9,  label: 'October',   draft: true  },
+  { year: 2026, month: 10, label: 'November',  draft: true  },
+  { year: 2026, month: 11, label: 'December',  draft: true  },
 ];
 
+// ── HELPERS ───────────────────────────────────────────────────────────────────
 const DOW_LABELS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const todayStr = new Date().toISOString().slice(0,10);
 function pad(n) { return String(n).padStart(2,'0'); }
+function dk(y, m, d) { return `${y}-${pad(m+1)}-${pad(d)}`; }
+function monthKey(y, m) { return `${y}-${pad(m+1)}`; }
 
-const year = 2026, month = 5, label = 'June';
-const firstDow = new Date(year, month, 1).getDay();
-const startOffset = firstDow === 0 ? 6 : firstDow - 1;
-const daysInMonth = new Date(year, month + 1, 0).getDate();
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderMonth({ year, month, label, draft }) {
+  const firstDow = new Date(year, month, 1).getDay();
+  const startOffset = firstDow === 0 ? 6 : firstDow - 1;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-function dk(d) { return `${year}-${pad(month+1)}-${pad(d)}`; }
+  // Collect which staff appear this month for legend
+  const usedStaff = new Set();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dow = (startOffset + d - 1) % 7;
+    const key = dk(year, month, d);
+    const staff = CONFIRMED[key] || standardShifts(dow);
+    staff.forEach(s => usedStaff.add(s));
+  }
 
-// Legend — staff who appear this month
-const usedStaff = new Set();
-for (let d = 1; d <= daysInMonth; d++) {
-  (ROTA[dk(d)] || []).forEach(s => usedStaff.add(s));
-}
-const legendHTML = Object.keys(STAFF)
-  .filter(s => usedStaff.has(s))
-  .map(s => `
-    <div class="legend-item">
-      <div class="legend-dot" style="background:${STAFF[s].color}"></div>
-      ${STAFF[s].name}
-    </div>`).join('')
-  + `<div class="legend-item"><span class="legend-note">★ opens &nbsp;·&nbsp; 🚩 needs cover</span></div>`;
+  const legendHTML = Object.keys(STAFF)
+    .filter(s => usedStaff.has(s))
+    .map(s => `
+      <div class="legend-item">
+        <div class="legend-dot" style="background:${STAFF[s].color}"></div>
+        ${STAFF[s].name}
+      </div>`).join('')
+    + `<div class="legend-item"><span class="legend-note">★ opens &nbsp;·&nbsp; 🚩 needs cover</span></div>`;
 
-// Grid
-let cells = '';
-for (let i = 0; i < startOffset; i++) {
-  cells += `<div class="day-cell empty"></div>`;
-}
+  // Empty lead cells
+  let cells = '';
+  for (let i = 0; i < startOffset; i++) {
+    cells += `<div class="day-cell empty"></div>`;
+  }
 
-for (let d = 1; d <= daysInMonth; d++) {
-  const key = dk(d);
-  const dow = (startOffset + d - 1) % 7;
-  const isWeekend = dow >= 5;
-  const isToday = key === todayStr;
-  const isPast = key < todayStr;
-  const staff = ROTA[key] || [];
-  const op = getOpener(dow, staff);
-  const needsFlag = FLAGS.has(key);
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = dk(year, month, d);
+    const dow = (startOffset + d - 1) % 7;
+    const isWeekend = dow >= 5;
+    const isToday = key === todayStr;
+    const isPast = key < todayStr;
+    const staff = CONFIRMED[key] !== undefined ? CONFIRMED[key] : standardShifts(dow);
+    const op = getOpener(dow, staff);
+    const needsFlag = FLAGS.has(key);
 
-  const classes = ['day-cell',
-    isWeekend ? 'weekend' : '',
-    isToday   ? 'today'   : '',
-    (isPast && !isToday) ? 'past' : '',
-  ].filter(Boolean).join(' ');
+    const classes = ['day-cell',
+      isWeekend ? 'weekend' : '',
+      isToday   ? 'today'   : '',
+      (isPast && !isToday) ? 'past' : '',
+    ].filter(Boolean).join(' ');
 
-  const staffRows = staff.map(sid => {
-    const star = sid === op ? `<span class="opener-star">★</span>` : '';
-    return `<div class="staff-entry ${sid}">${star}${STAFF[sid].name}</div>`;
-  }).join('');
+    const staffRows = staff.map(sid => {
+      const star = sid === op ? `<span class="opener-star">★</span>` : '';
+      return `<div class="staff-entry ${sid}">${star}${STAFF[sid].name}</div>`;
+    }).join('');
 
-  cells += `
-    <div class="${classes}">
-      <div class="day-num">${d}</div>
-      <div class="staff-list">${staffRows}</div>
-      ${needsFlag ? `<div class="flag">🚩</div>` : ''}
+    cells += `
+      <div class="${classes}">
+        <div class="day-num">${d}</div>
+        <div class="staff-list">${staffRows}</div>
+        ${needsFlag ? `<div class="flag">🚩</div>` : ''}
+      </div>`;
+  }
+
+  // Trailing empty cells
+  const total = startOffset + daysInMonth;
+  const trail = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let i = 0; i < trail; i++) cells += `<div class="day-cell empty"></div>`;
+
+  // Footer
+  const notes = (HOLIDAY_NOTES[monthKey(year, month)] || [])
+    .map(h => `<span><strong>${h.name}</strong> — ${h.note}</span>`).join('');
+  const footerHTML = notes ? `<div class="month-footer">${notes}</div>` : '';
+
+  return `
+    <div class="month-block">
+      <div class="month-header">
+        <div class="month-name">${label}</div>
+        <div class="month-year">${year}</div>
+        ${draft ? `<div class="draft-badge">Draft</div>` : ''}
+        <div class="legend">${legendHTML}</div>
+      </div>
+      <div class="dow-row">
+        ${DOW_LABELS.map((d,i) =>
+          `<div class="dow-cell${i>=5?' we':''}">${d}</div>`).join('')}
+      </div>
+      <div class="cal-grid">${cells}</div>
+      ${footerHTML}
     </div>`;
 }
 
-const total = startOffset + daysInMonth;
-const trail = total % 7 === 0 ? 0 : 7 - (total % 7);
-for (let i = 0; i < trail; i++) cells += `<div class="day-cell empty"></div>`;
-
-const footerNotes = HOLIDAY_NOTES
-  .map(h => `<span><strong>${h.name}</strong> — ${h.note}</span>`).join('');
-
-document.getElementById('root').innerHTML = `
-  <div class="month-block">
-    <div class="month-header">
-      <div class="month-name">${label}</div>
-      <div class="month-year">${year}</div>
-      <div class="legend">${legendHTML}</div>
-    </div>
-    <div class="dow-row">
-      ${DOW_LABELS.map((d,i) =>
-        `<div class="dow-cell${i>=5?' we':''}">${d}</div>`).join('')}
-    </div>
-    <div class="cal-grid">${cells}</div>
-    <div class="month-footer">${footerNotes}</div>
-  </div>`;
+document.getElementById('root').innerHTML = MONTHS.map(renderMonth).join('');
 </script>
 </body>
 </html>
