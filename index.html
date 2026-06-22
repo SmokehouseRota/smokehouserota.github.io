@@ -21,6 +21,7 @@
     --jake:   #2e9e45;   /* green */
     --jim:    #d4751a;   /* orange */
     --roxy:   #1a1a1a;   /* black */
+    --max:    #0e9e9e;   /* teal */
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -188,6 +189,7 @@
   .staff-entry.jake   { color: var(--jake); }
   .staff-entry.jim    { color: var(--jim); }
   .staff-entry.roxy   { color: var(--roxy); }
+  .staff-entry.max    { color: var(--max); }
 
   .flag {
     position: absolute;
@@ -240,6 +242,7 @@ const STAFF = {
   jake:   { name: 'Jake',   color: '#2e9e45' },
   jim:    { name: 'Jim',    color: '#d4751a' },
   roxy:   { name: 'Roxy',   color: '#1a1a1a' },
+  max:    { name: 'Max',    color: '#0e9e9e' },
 };
 
 // ── OPENER LOGIC ──────────────────────────────────────────────────────────────
@@ -318,7 +321,7 @@ const CONFIRMED = {
   '2026-07-07': ['claire','sid'],
   '2026-07-08': ['kasper','daisy'],
   '2026-07-09': ['kasper','daisy'],
-  '2026-07-10': ['sid'],
+  '2026-07-10': ['sid','max'],
   '2026-07-11': ['sid','jake','jim'],
   '2026-07-12': ['sid','jake','jim'],
 
@@ -336,7 +339,7 @@ const CONFIRMED = {
   '2026-07-23': ['kasper','daisy'],
   '2026-07-24': ['kasper','sid'],
   '2026-07-25': ['kasper','sid','jake'],
-  '2026-07-26': ['jake','jim'],
+  '2026-07-26': ['jake','jim','max'],
 
   '2026-07-27': ['kasper','jim'],
   '2026-07-28': ['claire','jim'],
@@ -350,8 +353,8 @@ const FLAGS = new Set([
   // June
   '2026-06-15','2026-06-21','2026-06-28',
   // July
-  '2026-07-03','2026-07-04','2026-07-05','2026-07-06','2026-07-10',
-  '2026-07-26','2026-07-27','2026-07-28','2026-07-29',
+  '2026-07-03','2026-07-04','2026-07-05','2026-07-06',
+  '2026-07-27','2026-07-28','2026-07-29',
 ]);
 
 // ── HOLIDAY FOOTER NOTES ──────────────────────────────────────────────────────
