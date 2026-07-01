@@ -212,7 +212,35 @@
   .month-footer span { margin-right: 20px; }
   .month-footer strong { color: #4a3020; }
 
-  @media (max-width: 580px) {
+  /* Collapsible past months */
+  .month-block.collapsed .dow-row,
+  .month-block.collapsed .cal-grid,
+  .month-block.collapsed .month-footer { display: none; }
+  .month-header { cursor: pointer; user-select: none; }
+  .collapse-indicator {
+    margin-left: 10px;
+    font-size: 13px;
+    color: #7a6a4a;
+    align-self: flex-end;
+    margin-bottom: 10px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .month-block.collapsed .collapse-indicator { transform: rotate(-90deg); }
+  .archived-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #5a4a2a;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid #3a2a0a;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+    align-self: flex-end;
+    margin-bottom: 8px;
+  }
     .day-cell { min-height: 76px; padding: 4px; }
     .day-num { font-size: 15px; }
     .staff-entry { font-size: 10px; }
@@ -313,7 +341,7 @@ const CONFIRMED = {
   // ══ JULY 2026 ══
   '2026-07-01': ['kasper','jim'],
   '2026-07-02': ['kasper','daisy'],
-  '2026-07-03': ['daisy'],
+  '2026-07-03': ['jim','daisy'],
   '2026-07-04': ['jake','jim','roxy'],
   '2026-07-05': ['jake','jim'],
 
@@ -353,7 +381,7 @@ const FLAGS = new Set([
   // June
   '2026-06-15','2026-06-21',
   // July
-  '2026-07-03','2026-07-05',
+  '2026-07-05',
   '2026-07-27','2026-07-28','2026-07-29',
 ]);
 
@@ -458,12 +486,19 @@ function renderMonth({ year, month, label, draft }) {
     .map(h => `<span><strong>${h.name}</strong> — ${h.note}</span>`).join('');
   const footerHTML = notes ? `<div class="month-footer">${notes}</div>` : '';
 
+  // Is this month fully in the past?
+  const now = new Date();
+  const isPastMonth = (year < now.getFullYear()) ||
+    (year === now.getFullYear() && month < now.getMonth());
+
   return `
-    <div class="month-block">
-      <div class="month-header">
+    <div class="month-block${isPastMonth ? ' collapsed' : ''}" id="month-${year}-${month}">
+      <div class="month-header" onclick="toggleMonth('month-${year}-${month}')">
         <div class="month-name">${label}</div>
         <div class="month-year">${year}</div>
+        ${isPastMonth ? `<div class="archived-label">Archive</div>` : ''}
         ${draft ? `<div class="draft-badge">Draft</div>` : ''}
+        <div class="collapse-indicator">▼</div>
         <div class="legend">${legendHTML}</div>
       </div>
       <div class="dow-row">
@@ -476,6 +511,10 @@ function renderMonth({ year, month, label, draft }) {
 }
 
 document.getElementById('root').innerHTML = MONTHS.map(renderMonth).join('');
+
+function toggleMonth(id) {
+  document.getElementById(id).classList.toggle('collapsed');
+}
 </script>
 </body>
 </html>
