@@ -603,5 +603,11 @@ function toggleMonth(id) {
   document.getElementById(id).classList.toggle('collapsed');
 }
 </script>
+<script>
+  // Force fresh version every time the page is opened
+  if (!window.location.search.includes('fresh')) {
+    window.location.replace(window.location.href.split('?')[0] + '?fresh=' + Date.now());
+  }
+</script>
 </body>
 </html>
