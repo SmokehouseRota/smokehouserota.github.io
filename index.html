@@ -460,9 +460,9 @@ const CONFIRMED = {
   '2026-07-31': ['kasper','sid'],
 
   // ══ AUGUST 2026 ══
-  '2026-08-01': ['kasper','sid','max'],
-  '2026-08-02': ['sid','jim','max'],
-  '2026-08-05': ['kasper','claire'],       // Claire extra day
+  '2026-08-01': ['kasper','sid','jim'],    // Jim covers Max
+  '2026-08-02': ['sid','jim','kasper'],    // Kasper third person 11–3
+  '2026-08-05': ['claire','daisy'],        // Kasper off, Claire cooks, Daisy 10:30
   '2026-08-08': ['kasper','sid','jim'],    // Jake off, Jim in
   '2026-08-09': ['sid','jake','jim'],      // Jake in, cooking
   '2026-08-12': ['kasper','claire'],
@@ -482,7 +482,6 @@ const CONFIRMED = {
 // ── FLAGS ─────────────────────────────────────────────────────────────────────
 const FLAGS = new Set([
   // August
-  '2026-08-01','2026-08-02',
   '2026-08-16',
 ]);
 
