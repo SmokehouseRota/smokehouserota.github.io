@@ -372,6 +372,23 @@ function getOpener(dow, staff) {
 // ── STANDARD TEMPLATE ─────────────────────────────────────────────────────────
 // Generates default staffing for any date based on rules
 // dow: 0=Mon..6=Sun
+// Kasper's last day is 28 August 2026 — he does not appear from September onward
+const KASPER_LAST_DAY = '2026-08-28';
+
+// Returns the staff for a date, applying Kasper's departure to template months
+function shiftsFor(key, dow) {
+  let staff = CONFIRMED[key] !== undefined ? CONFIRMED[key] : standardShifts(dow);
+  if (key > KASPER_LAST_DAY) staff = staff.filter(s => s !== 'kasper');
+  return staff;
+}
+
+// From September onward, auto-flag any day below the minimum (3 weekend, 2 weekday)
+function autoFlag(key, dow, staff) {
+  if (key <= KASPER_LAST_DAY) return false;
+  const min = dow >= 5 ? 3 : 2;
+  return staff.length < min;
+}
+
 function standardShifts(dow) {
   switch(dow) {
     case 0: return ['kasper','sid'];        // Mon: Kasper opens, Sid
@@ -471,18 +488,19 @@ const CONFIRMED = {
   '2026-08-15': ['kasper','jim','jake'],   // Jake in as third
   '2026-08-16': ['jake','jim'],            // Sun — Sid off, Jake cooks 🚩 needs third
   '2026-08-17': ['kasper','jim'],          // Mon — Kasper and Jim
-  '2026-08-19': ['kasper','roxy'],
+  '2026-08-19': ['kasper','daisy'],        // Wed — swapped with Roxie
+  '2026-08-20': ['kasper','roxy'],         // Thu — swapped with Daisy
   '2026-08-26': ['kasper','roxy'],
-  '2026-08-29': ['kasper','roxy','jake'],
+  '2026-08-29': ['roxy','jake'],           // Kasper gone, Jake cooks 🚩 needs third
   '2026-08-30': ['roxy','jake','jim'],
-  '2026-08-31': ['kasper','roxy'],
+  '2026-08-31': ['roxy'],                  // Kasper gone 🚩 needs cook
   '2026-08-26': ['kasper','roxy'],
 };
 
 // ── FLAGS ─────────────────────────────────────────────────────────────────────
 const FLAGS = new Set([
   // August
-  '2026-08-16',
+  '2026-08-16','2026-08-29','2026-08-31',
 ]);
 
 // ── HOLIDAY FOOTER NOTES ──────────────────────────────────────────────────────
@@ -532,7 +550,7 @@ function renderMonth({ year, month, label, draft }) {
   for (let d = 1; d <= daysInMonth; d++) {
     const dow = (startOffset + d - 1) % 7;
     const key = dk(year, month, d);
-    const staff = CONFIRMED[key] || standardShifts(dow);
+    const staff = shiftsFor(key, dow);
     staff.forEach(s => usedStaff.add(s));
   }
 
@@ -557,9 +575,9 @@ function renderMonth({ year, month, label, draft }) {
     const isWeekend = dow >= 5;
     const isToday = key === todayStr;
     const isPast = key < todayStr;
-    const staff = CONFIRMED[key] !== undefined ? CONFIRMED[key] : standardShifts(dow);
+    const staff = shiftsFor(key, dow);
     const op = getOpener(dow, staff);
-    const needsFlag = FLAGS.has(key);
+    const needsFlag = FLAGS.has(key) || autoFlag(key, dow, staff);
 
     const classes = ['day-cell',
       isWeekend ? 'weekend' : '',
