@@ -364,6 +364,8 @@ function getOpener(dow, staff) {
   if (dow === 1 && staff.includes('claire')) return 'claire';
   if (dow === 6 && staff.includes('sid'))    return 'sid';
   if (staff.includes('kasper'))              return 'kasper';
+  // Claire cooks and opens Wed and Fri once Kasper has gone
+  if ((dow === 2 || dow === 4) && staff.includes('claire')) return 'claire';
   if (dow === 6 && staff.includes('jake'))   return 'jake';
   if (staff.includes('sid'))                 return 'sid';
   return staff[0] || null;
@@ -375,11 +377,14 @@ function getOpener(dow, staff) {
 // Kasper's last day is 28 August 2026 — he does not appear from September onward
 const KASPER_LAST_DAY = '2026-08-28';
 
-// Returns the staff for a date, applying Kasper's departure to template months
+// Returns the staff for a date, switching template when Kasper leaves
 function shiftsFor(key, dow) {
-  let staff = CONFIRMED[key] !== undefined ? CONFIRMED[key] : standardShifts(dow);
-  if (key > KASPER_LAST_DAY) staff = staff.filter(s => s !== 'kasper');
-  return staff;
+  if (CONFIRMED[key] !== undefined) {
+    let staff = CONFIRMED[key];
+    if (key > KASPER_LAST_DAY) staff = staff.filter(s => s !== 'kasper');
+    return staff;
+  }
+  return key > KASPER_LAST_DAY ? autumnShifts(dow) : standardShifts(dow);
 }
 
 // From September onward, auto-flag any day below the minimum (3 weekend, 2 weekday)
@@ -387,6 +392,21 @@ function autoFlag(key, dow, staff) {
   if (key <= KASPER_LAST_DAY) return false;
   const min = dow >= 5 ? 3 : 2;
   return staff.length < min;
+}
+
+// Post-Kasper template — from September 2026
+// Cook listed first on each day
+function autumnShifts(dow) {
+  switch(dow) {
+    case 0: return ['sid','jake'];          // Mon: Sid cooks, Jake
+    case 1: return ['claire','jim'];        // Tue: Claire cooks, Jim
+    case 2: return ['claire','jim'];        // Wed: Claire cooks, Jim (or Daisy — TBC)
+    case 3: return ['sid','daisy'];         // Thu: Sid cooks, Daisy
+    case 4: return ['claire','sid'];        // Fri: Claire cooks, Sid
+    case 5: return ['sid','jim','jake'];    // Sat: Sid cooks, Jim, Jake
+    case 6: return ['sid','jim','jake'];    // Sun: Sid cooks, Jim, Jake
+    default: return [];
+  }
 }
 
 function standardShifts(dow) {
@@ -490,17 +510,20 @@ const CONFIRMED = {
   '2026-08-17': ['kasper','jim'],          // Mon — Kasper and Jim
   '2026-08-19': ['kasper','daisy'],        // Wed — swapped with Roxie
   '2026-08-20': ['kasper','roxy'],         // Thu — swapped with Daisy
+  '2026-08-24': ['sid','roxy'],            // Mon — Kasper off, Sid cooks, Roxie helps
   '2026-08-26': ['kasper','roxy'],
-  '2026-08-29': ['roxy','jake'],           // Kasper gone, Jake cooks 🚩 needs third
+  '2026-08-29': ['jake','roxy','jim'],     // Kasper gone, Jake opens & cooks
   '2026-08-30': ['roxy','jake','jim'],
-  '2026-08-31': ['roxy'],                  // Kasper gone 🚩 needs cook
-  '2026-08-26': ['kasper','roxy'],
+  '2026-08-31': ['jake','roxy'],           // Mon — Jake cooks & opens, Roxie helps
+
+  // ══ SEPTEMBER 2026 ══
+  '2026-09-26': ['jake'],                  // Sat — Sid & Jim away 🚩
 };
 
 // ── FLAGS ─────────────────────────────────────────────────────────────────────
 const FLAGS = new Set([
   // August
-  '2026-08-16','2026-08-29','2026-08-31',
+  '2026-08-16',
 ]);
 
 // ── HOLIDAY FOOTER NOTES ──────────────────────────────────────────────────────
@@ -509,6 +532,10 @@ const HOLIDAY_NOTES = {
     { name: 'Daisy',  note: 'off 11 June' },
     { name: 'Sid',    note: 'off 20 June' },
     { name: 'Jim',    note: 'away 21–28 June' },
+  ],
+  '2026-09': [
+    { name: 'Sid', note: 'off 26 September' },
+    { name: 'Jim', note: 'off 26 September' },
   ],
   '2026-08': [
     { name: 'Jake', note: 'off 8–9 August' },
@@ -585,7 +612,10 @@ function renderMonth({ year, month, label, draft }) {
       (isPast && !isToday) ? 'past' : '',
     ].filter(Boolean).join(' ');
 
-    const staffRows = staff.map(sid => {
+    // Opener always listed first
+    const ordered = op ? [op, ...staff.filter(s => s !== op)] : staff;
+
+    const staffRows = ordered.map(sid => {
       const star = sid === op ? `<span class="opener-star">★</span>` : '';
       return `<div class="staff-entry ${sid}">${star}${STAFF[sid].name}</div>`;
     }).join('');
