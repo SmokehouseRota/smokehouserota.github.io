@@ -512,25 +512,24 @@ const CONFIRMED = {
   '2026-08-20': ['kasper','roxy'],         // Thu — swapped with Daisy
   '2026-08-24': ['sid','roxy'],            // Mon — Kasper off, Sid cooks, Roxie helps
   '2026-08-26': ['kasper','roxy'],
-  '2026-08-29': ['jake','roxy'],           // Kasper gone, Jake opens & cooks 🚩 needs third
+  '2026-08-29': ['jake','roxy','claire'],  // Kasper gone, Jake opens & cooks
   '2026-08-30': ['roxy','jake','jim'],
   '2026-08-31': ['jake','roxy'],           // Mon — Jake cooks & opens, Roxie helps
 
   // ══ SEPTEMBER 2026 ══
-  // Claire away 2–11 Sept
-  '2026-09-02': ['jim'],                   // Wed 🚩 no cook
-  '2026-09-04': ['sid'],                   // Fri 🚩 needs second
-  '2026-09-08': ['jim'],                   // Tue 🚩 no cook
-  '2026-09-09': ['jim'],                   // Wed 🚩 no cook
-  '2026-09-11': ['sid'],                   // Fri 🚩 needs second
-
   '2026-09-26': ['jake'],                  // Sat — Sid & Jim away 🚩
+
+  // ══ OCTOBER 2026 ══
+  // Claire away 3–11 Oct (works Fri 2)
+  '2026-10-06': ['jim'],                   // Tue 🚩 no cook
+  '2026-10-07': ['jim'],                   // Wed 🚩 no cook
+  '2026-10-09': ['sid'],                   // Fri 🚩 needs second
 };
 
 // ── FLAGS ─────────────────────────────────────────────────────────────────────
 const FLAGS = new Set([
   // August
-  '2026-08-16','2026-08-29',
+  '2026-08-16',
 ]);
 
 // ── HOLIDAY FOOTER NOTES ──────────────────────────────────────────────────────
@@ -540,8 +539,10 @@ const HOLIDAY_NOTES = {
     { name: 'Sid',    note: 'off 20 June' },
     { name: 'Jim',    note: 'away 21–28 June' },
   ],
+  '2026-10': [
+    { name: 'Claire', note: 'away 3–11 October' },
+  ],
   '2026-09': [
-    { name: 'Claire', note: 'away 2–11 September' },
     { name: 'Sid', note: 'off 26 September' },
     { name: 'Jim', note: 'off 26 September' },
   ],
