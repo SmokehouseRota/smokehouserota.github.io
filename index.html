@@ -400,7 +400,7 @@ function autumnShifts(dow) {
   switch(dow) {
     case 0: return ['sid','jake'];          // Mon: Sid cooks, Jake
     case 1: return ['claire','jim'];        // Tue: Claire cooks, Jim
-    case 2: return ['claire','jim'];        // Wed: Claire cooks, Jim (or Daisy — TBC)
+    case 2: return ['claire','daisy'];      // Wed: Claire cooks, Daisy (Jim if Daisy can't)
     case 3: return ['sid','daisy'];         // Thu: Sid cooks, Daisy
     case 4: return ['claire','sid'];        // Fri: Claire cooks, Sid
     case 5: return ['sid','jim','jake'];    // Sat: Sid cooks, Jim, Jake
@@ -517,7 +517,7 @@ const CONFIRMED = {
   '2026-08-31': ['jake','roxy'],           // Mon — Jake cooks & opens, Roxie helps
 
   // ══ SEPTEMBER 2026 ══
-  '2026-09-26': ['jake'],                  // Sat — Sid & Jim away 🚩
+  '2026-09-26': ['jake','claire'],         // Sat — Sid & Jim away; cook TBC 🚩
 
   // ══ OCTOBER 2026 ══
   // Claire away 3–11 Oct (works Fri 2)
@@ -529,7 +529,7 @@ const CONFIRMED = {
 // ── FLAGS ─────────────────────────────────────────────────────────────────────
 const FLAGS = new Set([
   // August
-  '2026-08-16',
+  '2026-08-16','2026-09-26',
 ]);
 
 // ── HOLIDAY FOOTER NOTES ──────────────────────────────────────────────────────
