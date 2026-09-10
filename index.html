@@ -517,13 +517,21 @@ const CONFIRMED = {
   '2026-08-31': ['jake','roxy'],           // Mon — Jake cooks & opens, Roxie helps
 
   // ══ SEPTEMBER 2026 ══
+  '2026-09-14': ['sid','jim'],             // Mon — Jake covered by Jim
+  '2026-09-19': ['sid','jim','claire'],    // Sat — Jake off, Claire in
+  '2026-09-20': ['jake','jim'],            // Sun — Sid off, Jake opens 🚩 needs third
   '2026-09-26': ['jake','claire'],         // Sat — Sid & Jim away; cook TBC 🚩
 
   // ══ OCTOBER 2026 ══
   // Claire away 3–11 Oct (works Fri 2)
   '2026-10-06': ['jim'],                   // Tue 🚩 no cook
-  '2026-10-07': ['jim'],                   // Wed 🚩 no cook
+  '2026-10-07': ['jim','daisy'],           // Wed — Claire away, Jim cooks, Daisy helps
   '2026-10-09': ['sid'],                   // Fri 🚩 needs second
+
+  // Sid off Halloween weekend (30 Oct – 1 Nov)
+  '2026-10-30': ['claire'],                // Fri — Sid off 🚩 needs second
+  '2026-10-31': ['jake','jim'],            // Sat — Sid off, Jake cooks 🚩 needs third
+  '2026-11-01': ['jake','jim'],            // Sun — Sid off, Jake cooks 🚩 needs third
 };
 
 // ── FLAGS ─────────────────────────────────────────────────────────────────────
@@ -539,11 +547,16 @@ const HOLIDAY_NOTES = {
     { name: 'Sid',    note: 'off 20 June' },
     { name: 'Jim',    note: 'away 21–28 June' },
   ],
+  '2026-11': [
+    { name: 'Sid', note: 'off 1 November' },
+  ],
   '2026-10': [
     { name: 'Claire', note: 'away 3–11 October' },
+    { name: 'Sid', note: 'off 30–31 October' },
   ],
   '2026-09': [
-    { name: 'Sid', note: 'off 26 September' },
+    { name: 'Jake', note: 'off 14 & 19 September' },
+    { name: 'Sid', note: 'off 20 & 26 September' },
     { name: 'Jim', note: 'off 26 September' },
   ],
   '2026-08': [
